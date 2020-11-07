@@ -15,7 +15,39 @@ const webscraping = async (pageURL) => {
     await page.waitForTimeout(1500);
   }
 
+  const exercises = await page.$$('.ExResult-row');
+  const exerciseList = [];
+  for (let exercise of exercises) {
+    const name = await exercise
+      .$eval('.ExHeading a', (el) => el.textContent.replace(/\s+/g, ' ').trim())
+      .catch((err) => console.error('no name'));
+
+    const targetMuscle = await exercise
+      .$eval('.ExResult-muscleTargeted a', (el) =>
+        el.textContent.replace(/\s+/g, ' ').trim()
+      )
+      .catch((err) => console.error('no target muscle'));
+
+    const equipment = await exercise
+      .$eval('.ExResult-equipmentType a', (el) =>
+        el.textContent.replace(/\s+/g, ' ').trim()
+      )
+      .catch((err) => console.error('no equipment'));
+
+    const average = await exercise
+      .$eval('.ExRating-badge', (el) =>
+        el.textContent.replace(/\s+/g, ' ').trim()
+      )
+      .catch((err) => console.error('no average'));
+
+    const imageURL = await exercise
+      .$eval('.ExResult-img', (el) => el.getAttribute('src'))
+      .catch((err) => console.error('no imageURL'));
+
+  }
+
   await browser.close();
+  return dataObj;
 };
 
 module.exports = webscraping;
