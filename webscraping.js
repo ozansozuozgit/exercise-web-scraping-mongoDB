@@ -44,6 +44,19 @@ const webscraping = async (pageURL) => {
       .$eval('.ExResult-img', (el) => el.getAttribute('src'))
       .catch((err) => console.error('no imageURL'));
 
+    if (name && targetMuscle && equipment && average && imageURL) {
+      exerciseList.push({
+        name,
+        targetMuscle,
+        equipment,
+        average,
+        imageURL,
+      });
+    }
+    dataObj = {
+      amount: exerciseList.length,
+      exerciseList,
+    };
   }
 
   await browser.close();
